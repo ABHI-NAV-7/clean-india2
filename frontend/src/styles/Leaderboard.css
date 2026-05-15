@@ -1,0 +1,270 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+
+
+body{
+  font-family:Helvetica,sans-serif;
+}
+
+
+
+/* SECTION */
+
+.leaderboard-section{
+
+  min-height:100vh;
+
+  background:#f8fafc;
+
+  padding:120px 5%;
+}
+
+
+
+/* CONTAINER */
+
+.container{
+
+  max-width:1400px;
+
+  margin:auto;
+}
+
+
+
+/* TITLE */
+
+.container h2{
+
+  text-align:center;
+
+  font-size:60px;
+
+  margin-bottom:15px;
+
+  color:#0f172a;
+}
+
+
+
+.green-text{
+
+  color:#22c55e;
+}
+
+
+
+/* SUBTITLE */
+
+.section-sub{
+
+  text-align:center;
+
+  font-size:22px;
+
+  color:#475569;
+
+  margin-bottom:50px;
+}
+
+
+
+/* TABLE */
+
+.leaderboard-table{
+
+  background:white;
+
+  border-radius:30px;
+
+  overflow:hidden;
+
+  box-shadow:
+  0 15px 40px rgba(0,0,0,0.08);
+}
+
+
+
+/* HEADER */
+
+.lb-header{
+
+  background:#0f2d4a;
+
+  color:white;
+
+  display:grid;
+
+  grid-template-columns:
+  1fr 2fr 1fr 1fr;
+
+  padding:28px;
+
+  font-size:20px;
+
+  font-weight:bold;
+}
+
+
+
+/* ROWS */
+
+.lb-row{
+
+  display:grid;
+
+  grid-template-columns:
+  1fr 2fr 1fr 1fr;
+
+  padding:30px 28px;
+
+  align-items:center;
+
+  font-size:20px;
+
+  color:#0f172a;
+
+  border-bottom:
+  1px solid #e2e8f0;
+
+  transition:0.3s ease;
+}
+
+
+
+/* TOP 3 COLORS */
+
+.gold-row{
+
+  background:#fefce8;
+}
+
+
+
+.silver-row{
+
+  background:#f1f5f9;
+}
+
+
+
+.bronze-row{
+
+  background:#fef3c7;
+}
+
+
+
+/* HOVER */
+
+.lb-row:hover{
+
+  background:#dcfce7;
+
+  transform:scale(1.01);
+}
+
+
+
+/* RANK */
+
+.rank{
+
+  font-weight:bold;
+
+  font-size:22px;
+}
+
+
+
+/* POINTS */
+
+.points{
+
+  font-weight:700;
+
+  color:#15803d;
+}
+
+
+
+/* LOADING */
+
+.loading-text{
+
+  text-align:center;
+
+  margin-top:50px;
+
+  color:#15803d;
+
+  font-size:28px;
+
+  font-weight:bold;
+}
+
+
+
+/* EMPTY */
+
+.empty-text{
+
+  text-align:center;
+
+  margin-top:40px;
+
+  font-size:24px;
+
+  color:#64748b;
+}
+
+
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+  .container h2{
+
+    font-size:42px;
+
+  }
+
+
+
+  .section-sub{
+
+    font-size:18px;
+
+  }
+
+
+
+  .lb-header,
+
+  .lb-row{
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    font-size:14px;
+
+    padding:18px 12px;
+
+    gap:10px;
+
+  }
+
+
+
+  .rank{
+
+    font-size:18px;
+
+  }
+
+}
