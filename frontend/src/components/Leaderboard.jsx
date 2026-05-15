@@ -1,9 +1,17 @@
 import {
 
   useEffect,
-  useState
+  useState,
+  useCallback
 
 } from "react";
+
+import {
+
+  FaTrophy,
+  FaMedal
+
+} from "react-icons/fa";
 
 import API
 from "../api/axios";
@@ -21,42 +29,49 @@ function Leaderboard(){
 
 
 
-  // FETCH DATA
+  // ================= FETCH LEADERBOARD =================
 
   const fetchLeaderboard =
-  async()=>{
+  useCallback(
 
-    try{
+    async()=>{
 
-      const response =
+      try{
 
-      await API.get(
+        const response =
 
-        "/api/reports/leaderboard"
+        await API.get(
 
-      );
+          "/api/reports/leaderboard"
 
-
-
-      setLeaders(
-
-        response.data
-
-      );
+        );
 
 
 
-      setLoading(false);
+        setLeaders(
 
-    }catch(error){
+          response.data.slice(0,7)
 
-      console.log(error);
+        );
 
-      setLoading(false);
 
-    }
 
-  };
+        setLoading(false);
+
+      }catch(error){
+
+        console.log(error);
+
+        setLoading(false);
+
+      }
+
+    },
+
+    []
+
+  );
+
 
 
 
@@ -64,7 +79,7 @@ function Leaderboard(){
 
     fetchLeaderboard();
 
-  },[]);
+  },[fetchLeaderboard]);
 
 
 
@@ -75,9 +90,15 @@ function Leaderboard(){
 
       <div className="container">
 
+        {/* TITLE */}
+
         <h2>
 
-          🏆 Top
+          <FaTrophy />
+
+          {" "}
+
+          Top
           {" "}
 
           <span className="green-text">
@@ -154,11 +175,7 @@ function Leaderboard(){
 
               {
 
-                leaders
-
-                .slice(0,3)
-
-                .map((user,index)=>(
+                leaders.map((user,index)=>(
 
                   <div
 
@@ -178,13 +195,19 @@ function Leaderboard(){
 
                         ? "silver-row"
 
-                        : "bronze-row"
+                        : index === 2
+
+                        ? "bronze-row"
+
+                        : ""
 
                       }
 
                     `}
 
                   >
+
+                    {/* RANK */}
 
                     <div className="rank">
 
@@ -194,13 +217,30 @@ function Leaderboard(){
 
 
 
-                    <div>
+                    {/* USER */}
+
+                    <div className="leader-user">
+
+                      {
+
+                        index < 3 && (
+
+                          <FaMedal
+                          className="medal-icon" />
+
+                        )
+
+                      }
+
+
 
                       {user.name}
 
                     </div>
 
 
+
+                    {/* REPORTS */}
 
                     <div>
 
@@ -209,6 +249,8 @@ function Leaderboard(){
                     </div>
 
 
+
+                    {/* POINTS */}
 
                     <div className="points">
 
