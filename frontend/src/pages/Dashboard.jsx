@@ -1,8 +1,7 @@
 import {
 
   useEffect,
-  useState,
-  useCallback
+  useState
 
 } from "react";
 
@@ -17,8 +16,7 @@ import {
   FaUserCircle,
   FaFileAlt,
   FaMedal,
-  FaArrowLeft,
-  FaTrophy
+  FaArrowLeft
 
 } from "react-icons/fa";
 
@@ -34,9 +32,6 @@ function Dashboard(){
 
   const [points,setPoints] =
   useState(0);
-
-  const [leaders,setLeaders] =
-  useState([]);
 
 
 
@@ -64,94 +59,64 @@ function Dashboard(){
 
 
 
-  // ================= FETCH USER REPORTS =================
+  // FETCH USER REPORTS
 
   const fetchReports =
-  useCallback(
+  async()=>{
 
-    async()=>{
+    try{
 
-      try{
+      console.log(
 
-        const response =
+        "EMAIL:",
 
-        await API.get(
+        email
 
-          `/api/reports/user/${email}`
-
-        );
+      );
 
 
 
-        setReports(
+      const response =
 
-          response.data
+      await API.get(
 
-        );
+        `/api/reports/user/${email}`
 
-
-
-        setPoints(
-
-          response.data.length * 20
-
-        );
+      );
 
 
 
-      }catch(error){
+      console.log(
 
-        console.log(error);
+        response.data
 
-      }
-
-    },
-
-    [email]
-
-  );
+      );
 
 
 
+      setReports(
 
-  // ================= FETCH TOP 7 =================
+        response.data
 
-  const fetchLeaderboard =
-  useCallback(
-
-    async()=>{
-
-      try{
-
-        const response =
-
-        await API.get(
-
-          "/api/reports/leaderboard"
-
-        );
+      );
 
 
 
-        setLeaders(
+      setPoints(
 
-          response.data.slice(0,7)
+        response.data.length * 20
 
-        );
+      );
 
 
 
-      }catch(error){
+    }catch(error){
 
-        console.log(error);
+      console.log(error);
 
-      }
+    }
 
-    },
-
-    []
-
-  );
+  };
 
 
 
@@ -160,9 +125,7 @@ function Dashboard(){
 
     fetchReports();
 
-    fetchLeaderboard();
-
-  },[fetchReports,fetchLeaderboard]);
+  },[]);
 
 
 
@@ -197,20 +160,19 @@ function Dashboard(){
         className="profile-icon" />
 
 
+<h1 className="profile-username">
 
-        <h1 className="profile-username">
+  {username}
 
-          {username}
-
-        </h1>
-
+</h1>
 
 
-        <p className="profile-email">
 
-          {email}
+<p className="profile-email">
 
-        </p>
+  {email}
+
+</p>
 
       </div>
 
@@ -284,82 +246,6 @@ function Dashboard(){
 
       </div>
 
-
-
-      {/* TOP 7 LEADERBOARD */}
-
-      <div className="top-leaders-section">
-
-        <h2>
-
-          <FaTrophy />
-
-          Top 7 Contributors
-
-        </h2>
-
-
-
-        <div className="top-leaders-container">
-
-          {
-
-            leaders.map((user,index)=>(
-
-              <div
-
-                key={index}
-
-                className="leader-item"
-
-              >
-
-                <div className="leader-rank">
-
-                  #{index + 1}
-
-                </div>
-
-
-
-                <div className="leader-details">
-
-                  <h3>
-
-                    {user.name}
-
-                  </h3>
-
-
-
-                  <p>
-
-                    {user.reports}
-                    {" "}
-                    Reports
-
-                  </p>
-
-                </div>
-
-
-
-                <div className="leader-points">
-
-                  ⭐ {user.points}
-
-                </div>
-
-              </div>
-
-            ))
-
-          }
-
-        </div>
-
-      </div>
-
     </div>
 
   );
@@ -367,3 +253,4 @@ function Dashboard(){
 }
 
 export default Dashboard;
+it need to show the top 7 make the changes and give me complete code
