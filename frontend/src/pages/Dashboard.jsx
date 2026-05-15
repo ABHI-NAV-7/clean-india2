@@ -1,7 +1,8 @@
 import {
 
   useEffect,
-  useState
+  useState,
+  useCallback
 
 } from "react";
 
@@ -16,7 +17,8 @@ import {
   FaUserCircle,
   FaFileAlt,
   FaMedal,
-  FaArrowLeft
+  FaArrowLeft,
+  FaTrophy
 
 } from "react-icons/fa";
 
@@ -32,6 +34,9 @@ function Dashboard(){
 
   const [points,setPoints] =
   useState(0);
+
+  const [leaders,setLeaders] =
+  useState([]);
 
 
 
@@ -59,64 +64,94 @@ function Dashboard(){
 
 
 
-  // FETCH USER REPORTS
+  // ================= FETCH USER REPORTS =================
 
   const fetchReports =
-  async()=>{
+  useCallback(
 
-    try{
+    async()=>{
 
-      console.log(
+      try{
 
-        "EMAIL:",
+        const response =
 
-        email
+        await API.get(
 
-      );
+          `/api/reports/user/${email}`
 
-
-
-      const response =
-
-      await API.get(
-
-        `/api/reports/user/${email}`
-
-      );
+        );
 
 
 
-      console.log(
+        setReports(
 
-        response.data
+          response.data
 
-      );
-
-
-
-      setReports(
-
-        response.data
-
-      );
+        );
 
 
 
-      setPoints(
+        setPoints(
 
-        response.data.length * 20
+          response.data.length * 20
 
-      );
+        );
 
 
 
-    }catch(error){
+      }catch(error){
 
-      console.log(error);
+        console.log(error);
 
-    }
+      }
 
-  };
+    },
+
+    [email]
+
+  );
+
+
+
+
+  // ================= FETCH TOP 7 =================
+
+  const fetchLeaderboard =
+  useCallback(
+
+    async()=>{
+
+      try{
+
+        const response =
+
+        await API.get(
+
+          "/api/reports/leaderboard"
+
+        );
+
+
+
+        setLeaders(
+
+          response.data.slice(0,7)
+
+        );
+
+
+
+      }catch(error){
+
+        console.log(error);
+
+      }
+
+    },
+
+    []
+
+  );
 
 
 
@@ -125,7 +160,9 @@ function Dashboard(){
 
     fetchReports();
 
-  },[]);
+    fetchLeaderboard();
+
+  },[fetchReports,fetchLeaderboard]);
 
 
 
@@ -160,19 +197,20 @@ function Dashboard(){
         className="profile-icon" />
 
 
-<h1 className="profile-username">
 
-  {username}
+        <h1 className="profile-username">
 
-</h1>
+          {username}
+
+        </h1>
 
 
 
-<p className="profile-email">
+        <p className="profile-email">
 
-  {email}
+          {email}
 
-</p>
+        </p>
 
       </div>
 
@@ -243,6 +281,82 @@ function Dashboard(){
       <div className="badge-card">
 
         🌿 Clean India Warrior
+
+      </div>
+
+
+
+      {/* TOP 7 LEADERBOARD */}
+
+      <div className="top-leaders-section">
+
+        <h2>
+
+          <FaTrophy />
+
+          Top 7 Contributors
+
+        </h2>
+
+
+
+        <div className="top-leaders-container">
+
+          {
+
+            leaders.map((user,index)=>(
+
+              <div
+
+                key={index}
+
+                className="leader-item"
+
+              >
+
+                <div className="leader-rank">
+
+                  #{index + 1}
+
+                </div>
+
+
+
+                <div className="leader-details">
+
+                  <h3>
+
+                    {user.name}
+
+                  </h3>
+
+
+
+                  <p>
+
+                    {user.reports}
+                    {" "}
+                    Reports
+
+                  </p>
+
+                </div>
+
+
+
+                <div className="leader-points">
+
+                  ⭐ {user.points}
+
+                </div>
+
+              </div>
+
+            ))
+
+          }
+
+        </div>
 
       </div>
 
