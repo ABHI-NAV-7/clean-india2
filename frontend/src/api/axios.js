@@ -5,7 +5,7 @@ const API =
 axios.create({
 
   baseURL:
-  "http://localhost:5000"
+  "https://clean-india2.onrender.com"
 
 });
 
