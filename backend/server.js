@@ -1,3 +1,15 @@
+require("dotenv").config();
+
+console.log(
+
+  "RAZORPAY KEY:",
+
+  process.env.RAZORPAY_KEY_ID
+
+);
+
+
+
 const express =
 require("express");
 
@@ -7,8 +19,9 @@ require("mongoose");
 const cors =
 require("cors");
 
-const dotenv =
-require("dotenv");
+
+
+// ROUTES
 
 const reportRoutes =
 require("./routes/reportRoutes");
@@ -17,31 +30,37 @@ const movementRoutes =
 require("./routes/movementRoutes");
 
 
-dotenv.config();
 
 const app = express();
 
 
 
-// MIDDLEWARE
+// ================= MIDDLEWARE =================
 
 app.use(cors());
 
 app.use(express.json());
 
 app.use(
+
   "/uploads",
+
   express.static("uploads")
+
 );
 
 
 
-// ROUTES
+// ================= ROUTES =================
 
 app.use(
+
   "/api/reports",
+
   reportRoutes
+
 );
+
 
 
 app.use(
@@ -53,7 +72,8 @@ app.use(
 );
 
 
-// MONGODB
+
+// ================= MONGODB =================
 
 mongoose.connect(
 
@@ -64,7 +84,9 @@ mongoose.connect(
 .then(()=>{
 
   console.log(
+
     "MongoDB Connected ✅"
+
   );
 
 })
@@ -77,12 +99,19 @@ mongoose.connect(
 
 
 
-// SERVER
+// ================= SERVER =================
 
-app.listen(5000,()=>{
+const PORT =
+5000;
+
+
+
+app.listen(PORT,()=>{
 
   console.log(
-    "Server Running 🚀"
+
+    `Server Running On Port ${PORT} 🚀`
+
   );
 
 });

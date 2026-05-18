@@ -180,65 +180,153 @@ function Movement(){
 
   // ================= DONATE =================
 
-  const donateNow =
-  async()=>{
+ const donateNow =
+async()=>{
 
-    try{
+  try{
 
-      // VALIDATION
+    if(
 
-      if(
+      !donation.name ||
 
-        !donation.name ||
+      !donation.email ||
 
-        !donation.email ||
+      !donation.amount
 
-        !donation.amount
+    ){
 
-      ){
+      alert(
 
-        alert(
-
-          "Please fill all donation fields ❌"
-
-        );
-
-
-
-        return;
-
-      }
-
-
-
-      // SAVE DONATION
-
-      await API.post(
-
-        "/api/movement/donate",
-
-        donation
+        "Please fill all donation fields ❌"
 
       );
 
 
 
-      // RAZORPAY LINK
-
-      window.location.href =
-
-      "https://rzp.io/l/testpayment";
-
-
-
-    }catch(error){
-
-      console.log(error);
+      return;
 
     }
 
-  };
 
+
+    // SAVE DONATION
+
+    await API.post(
+
+      "/api/movement/donate",
+
+      donation
+
+    );
+
+
+
+    // CREATE ORDER
+
+    const {data} =
+
+    await API.post(
+
+      "/api/movement/create-order",
+
+      {
+
+        amount:
+        donation.amount
+
+      }
+
+    );
+
+
+
+    // RAZORPAY OPTIONS
+
+    const options = {
+
+      key:
+      "YOUR_RAZORPAY_KEY_ID",
+
+      amount:
+      data.amount,
+
+      currency:
+      data.currency,
+
+      name:
+      "Clean India",
+
+      description:
+      "Donation",
+
+      order_id:
+      data.id,
+
+
+
+      handler:function(response){
+
+        alert(
+
+          "Payment Successful ✅"
+
+        );
+
+
+
+        console.log(
+
+          response
+
+        );
+
+      },
+
+
+
+      prefill:{
+
+        name:
+        donation.name,
+
+        email:
+        donation.email
+
+      },
+
+
+
+      theme:{
+
+        color:"#16a34a"
+
+      }
+
+    };
+
+
+
+    const rzp =
+
+    new window.Razorpay(
+
+      options
+
+    );
+
+
+
+    rzp.open();
+
+
+
+  }catch(error){
+
+    console.log(error);
+
+  }
+
+};
 
 
 

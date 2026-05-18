@@ -13,6 +13,8 @@ require("../config/cloudinary");
 const Report =
 require("../models/Report");
 
+const razorpay =
+require("../config/razorpay");
 
 
 // MULTER STORAGE
@@ -300,6 +302,52 @@ router.get(
         "Failed to fetch reports ❌"
 
       });
+
+    }
+
+  }
+
+);
+
+router.post(
+
+  "/create-order",
+
+  async(req,res)=>{
+
+    try{
+
+      const options = {
+
+        amount:
+        req.body.amount * 100,
+
+        currency:"INR",
+
+        receipt:
+        "receipt_order"
+
+      };
+
+
+
+      const order =
+
+      await razorpay.orders.create(
+
+        options
+
+      );
+
+
+
+      res.json(order);
+
+
+
+    }catch(error){
+
+      console.log(error);
 
     }
 
