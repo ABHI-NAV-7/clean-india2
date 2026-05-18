@@ -17,7 +17,23 @@ import "../styles/Movement.css";
 
 function Movement(){
 
-  // ================= STATES =================
+  // ================= NAVIGATE =================
+
+  const navigate =
+  useNavigate();
+
+
+
+
+  // ================= POPUP =================
+
+  const [showPopup,setShowPopup] =
+  useState(false);
+
+
+
+
+  // ================= VOLUNTEER =================
 
   const [volunteer,setVolunteer] =
   useState({
@@ -32,6 +48,9 @@ function Movement(){
 
 
 
+
+  // ================= DONATION =================
+
   const [donation,setDonation] =
   useState({
 
@@ -40,16 +59,6 @@ function Movement(){
     amount:500
 
   });
-
-
-
-  const [showPopup,setShowPopup] =
-  useState(false);
-
-
-
-  const navigate =
-  useNavigate();
 
 
 
@@ -129,7 +138,7 @@ function Movement(){
 
 
 
-      // SAVE TO MONGO
+      // STORE IN MONGO
 
       const response =
 
@@ -180,153 +189,183 @@ function Movement(){
 
   // ================= DONATE =================
 
- const donateNow =
-async()=>{
+  const donateNow =
+  async()=>{
 
-  try{
+    try{
 
-    if(
+      // VALIDATION
 
-      !donation.name ||
+      if(
 
-      !donation.email ||
+        !donation.name ||
 
-      !donation.amount
+        !donation.email ||
 
-    ){
+        !donation.amount
 
-      alert(
+      ){
 
-        "Please fill all donation fields ❌"
+        alert(
+
+          "Please fill all donation fields ❌"
+
+        );
+
+
+
+        return;
+
+      }
+
+
+
+      // CHECK SDK
+
+      if(!window.Razorpay){
+
+        alert(
+
+          "Razorpay SDK Failed To Load ❌"
+
+        );
+
+
+
+        return;
+
+      }
+
+
+
+      // CREATE ORDER
+
+      const {data} =
+
+      await API.post(
+
+        "/api/movement/create-order",
+
+        {
+
+          amount:
+          donation.amount
+
+        }
 
       );
 
 
 
-      return;
+      // RAZORPAY OPTIONS
+
+      const options = {
+
+        key:
+        "rzp_test_Sqis45fFaHhfFh",
+
+        amount:
+        data.amount,
+
+        currency:
+        data.currency,
+
+        name:
+        "Clean India",
+
+        description:
+        "Donation Payment",
+
+        order_id:
+        data.id,
+
+
+
+        handler:
+        async function(response){
+
+          alert(
+
+            "Payment Successful ✅"
+
+          );
+
+
+
+          console.log(
+
+            response
+
+          );
+
+
+
+          // SAVE DONATION IN MONGO
+
+          await API.post(
+
+            "/api/movement/donate",
+
+            donation
+
+          );
+
+        },
+
+
+
+        prefill:{
+
+          name:
+          donation.name,
+
+          email:
+          donation.email
+
+        },
+
+
+
+        theme:{
+
+          color:"#16a34a"
+
+        }
+
+      };
+
+
+
+      const rzp =
+
+      new window.Razorpay(
+
+        options
+
+      );
+
+
+
+      rzp.open();
+
+
+
+    }catch(error){
+
+      console.log(error);
+
+
+
+      alert(
+
+        "Payment Failed ❌"
+
+      );
 
     }
 
+  };
 
-
-    // SAVE DONATION
-
-    await API.post(
-
-      "/api/movement/donate",
-
-      donation
-
-    );
-
-
-
-    // CREATE ORDER
-
-    const {data} =
-
-    await API.post(
-
-      "/api/movement/create-order",
-
-      {
-
-        amount:
-        donation.amount
-
-      }
-
-    );
-
-
-
-    // RAZORPAY OPTIONS
-
-    const options = {
-
-      key:
-      "YOUR_RAZORPAY_KEY_ID",
-
-      amount:
-      data.amount,
-
-      currency:
-      data.currency,
-
-      name:
-      "Clean India",
-
-      description:
-      "Donation",
-
-      order_id:
-      data.id,
-
-
-
-      handler:function(response){
-
-        alert(
-
-          "Payment Successful ✅"
-
-        );
-
-
-
-        console.log(
-
-          response
-
-        );
-
-      },
-
-
-
-      prefill:{
-
-        name:
-        donation.name,
-
-        email:
-        donation.email
-
-      },
-
-
-
-      theme:{
-
-        color:"#16a34a"
-
-      }
-
-    };
-
-
-
-    const rzp =
-
-    new window.Razorpay(
-
-      options
-
-    );
-
-
-
-    rzp.open();
-
-
-
-  }catch(error){
-
-    console.log(error);
-
-  }
-
-};
 
 
 
@@ -334,7 +373,7 @@ async()=>{
 
     <>
 
-      {/* POPUP */}
+      {/* ================= POPUP ================= */}
 
       {
 
@@ -377,7 +416,7 @@ async()=>{
 
 
 
-      {/* PAGE */}
+      {/* ================= PAGE ================= */}
 
       <div className="movement-page">
 
@@ -391,7 +430,10 @@ async()=>{
 
         <div className="movement-container">
 
-          {/* VOLUNTEER */}
+
+
+
+          {/* ================= VOLUNTEER ================= */}
 
           <div className="movement-card">
 
@@ -415,8 +457,6 @@ async()=>{
 
               onChange={handleVolunteer}
 
-              required
-
             />
 
 
@@ -432,8 +472,6 @@ async()=>{
               value={volunteer.email}
 
               onChange={handleVolunteer}
-
-              required
 
             />
 
@@ -451,8 +489,6 @@ async()=>{
 
               onChange={handleVolunteer}
 
-              required
-
             />
 
 
@@ -469,8 +505,6 @@ async()=>{
 
               onChange={handleVolunteer}
 
-              required
-
             />
 
 
@@ -485,15 +519,11 @@ async()=>{
 
               onChange={handleVolunteer}
 
-              required
-
             />
 
 
 
             <button
-
-              type="button"
 
               onClick={submitVolunteer}
 
@@ -508,7 +538,7 @@ async()=>{
 
 
 
-          {/* DONATE */}
+          {/* ================= DONATE ================= */}
 
           <div className="movement-card">
 
@@ -532,8 +562,6 @@ async()=>{
 
               onChange={handleDonation}
 
-              required
-
             />
 
 
@@ -549,8 +577,6 @@ async()=>{
               value={donation.email}
 
               onChange={handleDonation}
-
-              required
 
             />
 

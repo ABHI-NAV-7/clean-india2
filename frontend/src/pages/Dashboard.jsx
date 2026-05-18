@@ -253,4 +253,4 @@ function Dashboard(){
 }
 
 export default Dashboard;
-it need to show the top 7 make the changes and give me complete code
+

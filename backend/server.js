@@ -1,14 +1,8 @@
 require("dotenv").config();
 
-console.log(
-
-  "RAZORPAY KEY:",
-
-  process.env.RAZORPAY_KEY_ID
-
-);
 
 
+// ================= IMPORTS =================
 
 const express =
 require("express");
@@ -19,9 +13,12 @@ require("mongoose");
 const cors =
 require("cors");
 
+const path =
+require("path");
 
 
-// ROUTES
+
+// ================= ROUTES =================
 
 const reportRoutes =
 require("./routes/reportRoutes");
@@ -35,23 +32,54 @@ const app = express();
 
 
 
+
 // ================= MIDDLEWARE =================
 
 app.use(cors());
 
 app.use(express.json());
 
+app.use(express.urlencoded({
+
+  extended:true
+
+}));
+
+
+
+// ================= STATIC FOLDER =================
+
 app.use(
 
   "/uploads",
 
-  express.static("uploads")
+  express.static(
+
+    path.join(__dirname,"uploads")
+
+  )
 
 );
 
 
 
-// ================= ROUTES =================
+
+// ================= TEST ROUTE =================
+
+app.get("/",(req,res)=>{
+
+  res.send(
+
+    "Clean India Backend Running 🚀"
+
+  );
+
+});
+
+
+
+
+// ================= API ROUTES =================
 
 app.use(
 
@@ -70,6 +98,7 @@ app.use(
   movementRoutes
 
 );
+
 
 
 
@@ -93,16 +122,26 @@ mongoose.connect(
 
 .catch((error)=>{
 
+  console.log(
+
+    "MongoDB Error ❌"
+
+  );
+
+
+
   console.log(error);
 
 });
 
 
 
+
 // ================= SERVER =================
 
 const PORT =
-5000;
+
+process.env.PORT || 5000;
 
 
 

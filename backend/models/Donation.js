@@ -3,7 +3,7 @@ require("mongoose");
 
 
 
-const volunteerSchema =
+const donationSchema =
 
 new mongoose.Schema(
 
@@ -29,29 +29,9 @@ new mongoose.Schema(
 
 
 
-    phone:{
+    amount:{
 
-      type:String,
-
-      required:true
-
-    },
-
-
-
-    city:{
-
-      type:String,
-
-      required:true
-
-    },
-
-
-
-    skills:{
-
-      type:String,
+      type:Number,
 
       required:true
 
@@ -73,8 +53,8 @@ module.exports =
 
 mongoose.model(
 
-  "Volunteer",
+  "Donation",
 
-  volunteerSchema
+  donationSchema
 
 );
